@@ -50,6 +50,12 @@
         "scan": [
             "@mago",
             "@tests"
+        ],
+        "ci": [
+          "@mago",
+          "@tests",
+          "composer audit",
+          "vendor/bin/psalm --taint-analysis"
         ]
     },
     "config": {

@@ -1,78 +1,90 @@
-<!--
-Adapt this to the component. To do so, please refer to `TODO.md` file.
--->
-# Component template for Waffle Framework
+# Waffle Commons - Component Template
+<img src="./images/waffle-commons_logo.png" alt="Logo Waffles Commons" style="width: 25%;" /><br />
+This repository serves as a standardized template for creating new components within the Waffle Commons ecosystem. It provides a consistent structure, tooling configuration (Composer, PHPUnit, Mago, Psalm), and CI/CD pipeline (GitHub Actions) to accelerate development and maintain quality across all packages.
 
-## Instructions
+**Note:** Replace `YOUR_CODECOV_TOKEN_HERE` in the Codecov badge URL if you integrate Codecov. Also, replace `{COMPONENT_NAME}` placeholders in badges after running the configuration script or manually.
 
-## TODOs
+## Purpose
+Using this template ensures that new components adhere to the established standards of the Waffle Commons project regarding:
+- **Directory Structure:** Standard `src/`, `tests/`, etc.
+- **Coding Standards:** Enforced via Mago (formatter, linter, analyzer) with pre-configured rules.
+- **Testing:** Setup for PHPUnit, including configuration (`phpunit.xml`), bootstrap, and coverage reporting.
+- **Static Analysis:** Configured for Psalm and Mago Analyze. 
+- **Automation:** Pre-configured GitHub Actions workflow for CI, mirroring the core framework's quality checks. 
+- **Documentation:** Standard files like this `README.md`, `CONTRIBUTING.md`, `LICENSE.md`, issue templates, etc. 
+- **Composer Setup:** Pre-filled `composer.json` with necessary scripts and development dependencies.
 
-## About this project
+## How to Use This Template
+Follow these steps precisely to create a new Waffle Commons component:
 
-****
-<!-- Uncomment this when everything is ready (see TODO.md)
-[![PHP Version Require](http://poser.pugx.org/waffle-commons/{COMPONENT_NAME}/require/php)](https://packagist.org/packages/waffle-commons/{COMPONENT_NAME})
-[![PHP CI](https://github.com/waffle-commons/{COMPONENT_NAME}/actions/workflows/main.yml/badge.svg)](https://github.com/waffle-commons/{COMPONENT_NAME}/actions/workflows/main.yml)
-[![codecov](https://codecov.io/gh/waffle-commons/waffle/graph/badge.svg?token=d74ac62a-7872-4035-8b8b-bcc3af1991e0)](https://codecov.io/gh/waffle-commons/{COMPONENT_NAME})
-[![Latest Stable Version](http://poser.pugx.org/waffle-commons/{COMPONENT_NAME}/v)](https://packagist.org/packages/waffle-commons/{COMPONENT_NAME})
-[![Latest Unstable Version](http://poser.pugx.org/waffle-commons/{COMPONENT_NAME}/v/unstable)](https://packagist.org/packages/waffle-commons/{COMPONENT_NAME})
-[![Total Downloads](https://img.shields.io/packagist/dt/waffle-commons/{COMPONENT_NAME}.svg)](https://packagist.org/packages/waffle-commons/{COMPONENT_NAME})
-[![Packagist License](https://img.shields.io/packagist/l/waffle-commons/{COMPONENT_NAME})](https://github.com/waffle-commons/{COMPONENT_NAME}/blob/main/LICENSE.md)
--->
-# Waffle Framework
+### 1. **Clone the Template:**
+Use this template to create a new `waffle-commons` repository.
 
-A modern, minimalist, and security-focused PHP micro-framework designed for building fast and reliable JSON APIs. Waffle is built with the latest PHP features and a strong emphasis on a clean, robust, and fully-tested codebase.
-
-## {COMPONENT_NAME}
-
-_{COMPONENT_NAME}'s description and utilities_
-
-## Features
-
- - **Modern Architecture:** A simple and powerful Kernel handles the application lifecycle.
-
- - **Dependency Injection Container:** A lightweight, powerful container for managing your services.
-
- - **Attribute-based Routing:** Define your API endpoints directly on your controller methods using PHP attributes.
-
- - **Robust Security Layer:** An integrated security component that analyzes your code against configurable security levels.
-
- - **Automated CI/CD Pipeline:** Comes with a pre-configured GitHub Actions workflow that includes:
-
-   - **PHPUnit:** For unit and integration testing.
-
-   - **Mago:** For high-level static analysis & coding standards enforcement.
-
-   - **Composer Audit:** For security analysis of dependencies (SCA).
-
-   - **Psalm Taint Analysis:** For static application security testing (SAST).
-
-## Getting Started
-
-### Requirements
-
- - PHP 8.4 or higher
-
- - Composer
-
-### Installation
-
-_The workflow is currently under migration towards `waffle-commons/workspace` and will be update soon._
-
-You can run it directly on you machine (with PHP8.4+ installed).
-
-## Testing
-
-Waffle is built with testing in mind. To run the complete test suite for the framework itself:
-
+### 2. **Run the Configuration Script:**
+Execute the provided configuration script, passing the PascalCase component name as the first and only argument. This script will automatically replace the placeholder {COMPONENT_NAME} in file contents, filenames, and directory names.
 ```shell
-composer tests
+# Example for 'Http' component
+./configure-component.sh Http
 ```
+- Carefully review the output of the script to ensure all replacements and renames were successful.
+
+### 3. **Review and Finalize `composer.json`:**
+- Open composer.json.
+- Verify the `"name"` is correct (e.g., `waffle-commons/http`). It should have been updated by the script.
+- Crucially, update the `"description"` field to accurately describe your new component's purpose. 
+- Add any specific `require` dependencies needed for this component (e.g., `psr/http-message` for the `http` component).
+- Add specific `require-dev` dependencies if needed beyond the standard template (e.g., `php-mock/php-mock-phpunit` was included, but others might be needed).
+- Verify the PSR-4 namespaces in `autoload` and `autoload-dev` were correctly updated by the script.
+
+### 4. **Update Badges in README.md:**
+- Edit this `README.md` file to describe the component.
+
+### 5. **Configure GitHub Repository Settings:**
+- **Branch Protection:** Set up branch protection rules for `main` (require status checks to pass, require PR reviews, etc.).
+- **Secrets:** Add necessary secrets (e.g., `CODECOV_TOKEN`) if applicable for CI workflows.
+- **Labels:** Ensure standard labels (`bug`, `enhancement`, `good first issue`, etc.) are created (consider copying from `waffle-commons/waffle`).
+- **Discussions:** Enable GitHub Discussions if desired for the component.
+- **Issue:** Create customized template for **Bug report** (`.github/ISSUE_TEMPLATE/bug-report.md`) and  **Feature request** (`.github/ISSUE_TEMPLATE/feature-request.md`)
+- **Pull request:** Ensure standard pull requests respect the template (`.github/PULL_REQUEST_TEMPLATE.md`)
+
+### 6. **Start Developing!**
+You can now start writing your component's code in the `src/` directory and corresponding tests in the `tests/` directory. Remember to follow the established coding standards.
+
+## Development Tooling (Composer Scripts)
+This template comes with pre-configured Composer scripts for common development tasks. Run these from the root of your new component's directory:
+- **Install Dependencies:**
+    ```shell
+    composer install
+    ```
+- **Run Tests (PHPUnit):** Generates coverage reports in `var/data/phpunit-coverage/`.
+    ```shell
+    composer tests
+    ```
+- **Run Mago (Format Check, Lint, Analyze):**
+    ```shell
+    composer mago
+    ```
+    - Check Formatting Only: `composer formatter --check`
+    - Apply Formatting: `composer formatter` 
+    - Run Linter: `composer linter`
+    - Run Analyzer: `composer analyzer`
+- **Run Psalm-Taint Analysis:**
+    ```shell
+    vendor/bin/psalm --taint-analysis
+    ```
+- **Check for Dependency Vulnerabilities:**
+    ```shell
+    composer audit
+    ```
+- **Run All CI Checks Locally:** Simulates the checks run in GitHub Actions (without security checks).
+    ```shell
+    composer ci
+    ```
 
 ## Contributing
+While this repository is a template, contributions to the template itself (improving tooling, structure, CI) are welcome via Pull Requests to the `waffle-commons/component-template` repository.
 
-Contributions are welcome! Please feel free to submit a pull request or create an issue.
+For contributions to components created from this template, please refer to the main and the specific `CONTRIBUTING.md` within that component's repository.
 
 ## License
-
-This project is licensed under the MIT License. See the [LICENSE.md](./LICENSE.md) file for details.
+This template, and components created from it by default, are licensed under the MIT License. See the file for details.

@@ -22,7 +22,7 @@ NEW_NAME="$1"
 # Basic validation for PascalCase (recommended for PSR-4 class names)
 if ! [[ "$NEW_NAME" =~ ^[A-Z][a-zA-Z0-9]*$ ]]; then
  echo "Warning: ComponentName '$NEW_NAME' is not in standard PascalCase format." >&2
- # Decide if you want to exit(1) here or just warn
+ exit(1)
 fi
 
 echo "--------------------------------------------------"
@@ -53,8 +53,20 @@ done
 echo "Renaming complete."
 echo "--------------------------------------------------"
 
-# 3. Optional: Self-destruct the script after successful execution
-# echo "Step 3: Removing configuration script..."
+# 3. Remove template-specific boilerplate
+echo "Step 3: Removing template boilerplate..."
+# Check if the directory exists before trying to remove it
+if [ -d "images" ]; then
+  echo "  Removing 'images/' directory and all its contents (including waffles-commons_logo.png)..."
+  rm -rf images/
+else
+  echo "  'images/' directory not found, skipping cleanup."
+fi
+echo "Boilerplate removal complete."
+echo "--------------------------------------------------"
+
+# 4. Optional: Self-destruct the script after successful execution
+# echo "Step 4: Removing configuration script..."
 # rm -- "$0"
 # echo "Script removed."
 # echo "--------------------------------------------------"
