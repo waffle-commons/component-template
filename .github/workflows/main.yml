@@ -1,12 +1,13 @@
 name: PHP Granular Pipeline
 
-on:
-  push:
-    branches:
-      - main
-    tags:
-      - '*'
-  pull_request:
+on: workflow_dispatch
+# Uncomment this to activate the workflow on a new component
+#  push:
+#    branches:
+#      - main
+#    tags:
+#      - '*'
+#  pull_request:
 
 jobs:
   prepare:

@@ -11,7 +11,7 @@ Using this template ensures that new components adhere to the established standa
 - **Testing:** Setup for PHPUnit, including configuration (`phpunit.xml`), bootstrap, and coverage reporting.
 - **Static Analysis:** Configured for Psalm and Mago Analyze. 
 - **Automation:** Pre-configured GitHub Actions workflow for CI, mirroring the core framework's quality checks. 
-- **Documentation:** Standard files like this `README.md`, `CONTRIBUTING.md`, `LICENSE.md`, issue templates, etc. 
+- **Documentation:** Standard files like this `CONTRIBUTING.md`, `LICENSE.md`, issue templates, etc. 
 - **Composer Setup:** Pre-filled `composer.json` with necessary scripts and development dependencies.
 
 ## How to Use This Template
@@ -36,8 +36,9 @@ Execute the provided configuration script, passing the PascalCase component name
 - Add specific `require-dev` dependencies if needed beyond the standard template (e.g., `php-mock/php-mock-phpunit` was included, but others might be needed).
 - Verify the PSR-4 namespaces in `autoload` and `autoload-dev` were correctly updated by the script.
 
-### 4. **Update Badges in README.md:**
+### 4. **Updates in various files:**
 - Edit this `README.md` file to describe the component.
+- Edit `.github/workflows/main.yml` to activate it.
 
 ### 5. **Configure GitHub Repository Settings:**
 - **Branch Protection:** Set up branch protection rules for `main` (require status checks to pass, require PR reviews, etc.).
