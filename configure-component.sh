@@ -22,7 +22,7 @@ NEW_NAME="$1"
 # Basic validation for PascalCase (recommended for PSR-4 class names)
 if ! [[ "$NEW_NAME" =~ ^[A-Z][a-zA-Z0-9]*$ ]]; then
  echo "Warning: ComponentName '$NEW_NAME' is not in standard PascalCase format." >&2
- exit(1)
+ exit 1
 fi
 
 echo "--------------------------------------------------"
