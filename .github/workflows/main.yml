@@ -1,4 +1,4 @@
-name: PHP Granular Pipeline
+name: Waffle Granular Pipeline
 
 on: workflow_dispatch
 # Uncomment this to activate the workflow on a new component
@@ -95,7 +95,7 @@ jobs:
         with:
           php-version: ${{ matrix.php-version }}
           tools: composer:v2
-      - name: Cache and Install (will be fast)
+      - name: Cache and Install
         uses: actions/cache@v4
         with:
           path: ~/.composer/cache
@@ -125,8 +125,54 @@ jobs:
       - name: Run Mago Analyze
         run: vendor/bin/mago analyze --reporting-format=github
 
+  secret_scan:
+    name: 🕵️ Secret Scanning (TruffleHog)
+    needs: build
+    runs-on: ${{ matrix.operating-system }}
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.build.outputs.matrix) }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: TruffleHog OSS
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: ${{ github.event.repository.default_branch }}
+          head: ${{ github.head_ref }}
+          extra_args: --debug --only-verified
+
+  sbom_generate:
+    name: 📦 SBOM (CycloneDX)
+    needs: build
+    runs-on: ${{ matrix.operating-system }}
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.build.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          tools: composer:v2
+      - uses: actions/cache@v4
+        with:
+          path: ~/.composer/cache
+          key: ${{ runner.os }}-php-${{ matrix.php-version }}-composer-${{ hashFiles('**/composer.lock') }}
+      - name: Generate SBOM
+        run: composer install && composer CycloneDX:make-sbom --output-format=json --output-file=bom.json
+      - name: Upload SBOM Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom-cyclonedx
+          path: bom.json
+
   security_scan:
-    name: 🛡️ Security Scan (SCA & SAST)
+    name: 🛡️ Code Security (SCA & SAST)
     needs: build
     runs-on: ${{ matrix.operating-system }}
     strategy:
@@ -150,7 +196,7 @@ jobs:
 
   unit_tests:
     name: 🧪 Tests (PHP ${{ matrix.php-version }})
-    needs: [build, mago_lint, mago_analyze, security_scan]
+    needs: [build, mago_lint, mago_analyze, secret_scan, sbom_generate, security_scan]
     runs-on: ${{ matrix.operating-system }}
     strategy:
       fail-fast: false
@@ -172,7 +218,7 @@ jobs:
       - name: Run PHPUnit tests
         run: vendor/bin/phpunit --coverage-clover ./var/data/phpunit-coverage/clover.xml
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./var/data/phpunit-coverage/clover.xml
