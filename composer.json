@@ -1,6 +1,5 @@
 {
     "name": "waffle-commons/{COMPONENT_NAME}",
-    "version": "0.1.0-beta0",
     "description": "{COMPONENT_NAME} component for Waffle framework.",
     "type": "library",
     "license": "MIT",
