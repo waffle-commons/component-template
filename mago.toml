@@ -76,8 +76,9 @@ disallowed-functions = { level = "error", functions = ["eval", "exec", "system",
 # Code quality - Strict
 prefer-interface = { level = "error" }
 strict-types = { level = "error" }
-property-type = { level = "error" }
-return-type = { level = "error" }
+# NOTE: the template's `property-type` / `return-type` linter rules were removed:
+# they are not recognised by the pinned mago 1.29.0 (they break config parsing)
+# and are already enforced natively by the strict `[analyzer]` block below.
 
 cyclomatic-complexity = { level = "warning", threshold = 10 }
 
